@@ -137,6 +137,31 @@ function mostraResultado() {
             "Você valoriza estabilidade, conforto e momentos de paz. " +
             "Prefere pensar antes de agir e gosta de aproveitar as coisas no seu próprio ritmo.";
     }
+
+    // Criar o botão de jogar novamente
+    const botaoNovamente = document.createElement("button");
+
+    botaoNovamente.textContent = "Jogar novamente";
+
+    botaoNovamente.addEventListener("click", reiniciarJogo);
+
+    caixaAlternativas.appendChild(botaoNovamente);
+}
+
+function reiniciarJogo() {
+
+    // Zerar as respostas e o contador
+    atual = 0;
+
+    respostasA = 0;
+
+    respostasB = 0;
+
+    // Limpar o resultado anterior
+    textoResultado.textContent = "";
+
+    // Começar novamente pela primeira pergunta
+    mostraPergunta();
 }
 
 mostraPergunta();
