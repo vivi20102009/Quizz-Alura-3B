@@ -1,12 +1,44 @@
-const caixaPrincipal = document.querySelector(".caixa-principal");
+const paginaInicial = document.querySelector(".pagina-inicial");
+const paginaQuiz = document.querySelector(".pagina-quiz");
+
+const botaoComecar = document.querySelector("#botao-comecar");
+
 const caixaPerguntas = document.querySelector(".caixa-perguntas");
 const caixaAlternativas = document.querySelector(".caixa-alternativas");
 const caixaResultado = document.querySelector(".caixa-resultado");
-const textoResultado = document.querySelector(".texto-resultado");
 
+const textoResultado = document.querySelector(".texto-resultado");
+const nomeJogador = document.querySelector(".nome-jogador");
+const progresso = document.querySelector(".progresso");
+
+// Lista de nomes
+const nomes = [
+    "Gabriel",
+    "Ana",
+    "Pedro",
+    "Mariana",
+    "Lucas",
+    "Julia",
+    "Rafael",
+    "Beatriz",
+    "Matheus",
+    "Larissa",
+    "Felipe",
+    "Camila",
+    "Gustavo",
+    "Isabela",
+    "Miguel",
+    "Sofia",
+    "Arthur",
+    "Helena",
+    "Enzo",
+    "Laura"
+];
+
+// Perguntas do quiz
 const perguntas = [
     {
-        enunciado: "Seu fim de semana ideal seria:",
+        enunciado: "você prefere seu fim de semana ideal como?",
         alternativas: [
             {
                 texto: "A) Fazer algo diferente e sair da rotina",
@@ -20,7 +52,7 @@ const perguntas = [
     },
 
     {
-        enunciado: "Quando surge um problema, você:",
+        enunciado: "quando surge um problema, o que você faz?",
         alternativas: [
             {
                 texto: "A) Age rapidamente e resolve na hora",
@@ -34,7 +66,7 @@ const perguntas = [
     },
 
     {
-        enunciado: "Em uma viagem, você prefere:",
+        enunciado: "em uma viagem, o que você prefere?",
         alternativas: [
             {
                 texto: "A) Explorar lugares novos sem muito planejamento",
@@ -48,7 +80,7 @@ const perguntas = [
     },
 
     {
-        enunciado: "Seus amigos provavelmente diriam que você é:",
+        enunciado: "como seus amigos provavelmente descreveriam você?",
         alternativas: [
             {
                 texto: "A) Espontâneo(a) e cheio(a) de energia",
@@ -68,6 +100,38 @@ let perguntaAtual;
 let respostasA = 0;
 let respostasB = 0;
 
+let nomeAtual = "";
+
+// Sortear um nome aleatório
+function sortearNome() {
+    const indice = Math.floor(Math.random() * nomes.length);
+    return nomes[indice];
+}
+
+// Iniciar o quiz
+function iniciarJogo() {
+
+    nomeAtual = sortearNome();
+
+    atual = 0;
+    respostasA = 0;
+    respostasB = 0;
+
+    // Esconder a página inicial e mostrar o quiz
+    paginaInicial.style.display = "none";
+    paginaQuiz.style.display = "block";
+
+    // Mostrar o nome sorteado
+    nomeJogador.textContent = "Jogador(a): " + nomeAtual;
+
+    // Limpar o resultado anterior
+    textoResultado.textContent = "";
+    caixaResultado.style.display = "none";
+
+    mostraPergunta();
+}
+
+// Mostrar a pergunta atual
 function mostraPergunta() {
 
     if (atual >= perguntas.length) {
@@ -77,39 +141,44 @@ function mostraPergunta() {
 
     perguntaAtual = perguntas[atual];
 
-    caixaPerguntas.textContent = perguntaAtual.enunciado;
+    // Adicionar o nome no começo de cada pergunta
+    caixaPerguntas.textContent =
+        nomeAtual + ", " + perguntaAtual.enunciado;
 
+    // Mostrar o progresso
+    progresso.textContent =
+        "Pergunta " + (atual + 1) + " de " + perguntas.length;
+
+    // Limpar as alternativas anteriores
     caixaAlternativas.textContent = "";
 
     mostraAlternativas();
 }
 
+// Criar os botões de resposta
 function mostraAlternativas() {
 
     for (const alternativa of perguntaAtual.alternativas) {
 
-        const botaoAlternativas = document.createElement("button");
+        const botao = document.createElement("button");
 
-        botaoAlternativas.textContent = alternativa.texto;
+        botao.textContent = alternativa.texto;
 
-        botaoAlternativas.addEventListener("click", () => {
+        botao.addEventListener("click", function() {
             respostaSelecionada(alternativa);
         });
 
-        caixaAlternativas.appendChild(botaoAlternativas);
+        caixaAlternativas.appendChild(botao);
     }
 }
 
+// Registrar a resposta
 function respostaSelecionada(opcaoSelecionada) {
 
     if (opcaoSelecionada.afirmacao === "A") {
-
         respostasA++;
-
     } else {
-
         respostasB++;
-
     }
 
     atual++;
@@ -117,11 +186,16 @@ function respostaSelecionada(opcaoSelecionada) {
     mostraPergunta();
 }
 
+// Mostrar o resultado
 function mostraResultado() {
 
-    caixaPerguntas.textContent = "Seu resultado é:";
+    caixaPerguntas.textContent = nomeAtual + ", seu resultado é!";
+
+    progresso.textContent = "Quiz concluído!";
 
     caixaAlternativas.textContent = "";
+
+    caixaResultado.style.display = "block";
 
     if (respostasA > respostasB) {
 
@@ -130,38 +204,51 @@ function mostraResultado() {
             "Você gosta de novidades, desafios e experiências diferentes. " +
             "A rotina pode até ser confortável, mas você prefere quando existe algo novo para descobrir.";
 
-    } else {
+    } else if (respostasB > respostasA) {
 
         textoResultado.textContent =
             "Você é Tranquilo(a)! " +
             "Você valoriza estabilidade, conforto e momentos de paz. " +
             "Prefere pensar antes de agir e gosta de aproveitar as coisas no seu próprio ritmo.";
+
+    } else {
+
+        textoResultado.textContent =
+            "Você é um equilíbrio entre Aventureiro(a) e Tranquilo(a)! " +
+            "Você gosta de novidades, mas também valoriza os momentos de paz e tranquilidade.";
     }
 
-    // Criar o botão de jogar novamente
+    // Botão para jogar novamente
     const botaoNovamente = document.createElement("button");
 
     botaoNovamente.textContent = "Jogar novamente";
 
-    botaoNovamente.addEventListener("click", reiniciarJogo);
+    botaoNovamente.classList.add("botao-novamente");
+
+    botaoNovamente.addEventListener("click", voltarInicio);
 
     caixaAlternativas.appendChild(botaoNovamente);
 }
 
-function reiniciarJogo() {
+// Voltar à página inicial
+function voltarInicio() {
 
-    // Zerar as respostas e o contador
-    atual = 0;
+    paginaQuiz.style.display = "none";
+    paginaInicial.style.display = "block";
 
-    respostasA = 0;
+    caixaPerguntas.textContent = "";
+    caixaAlternativas.textContent = "";
 
-    respostasB = 0;
+    nomeJogador.textContent = "";
+    progresso.textContent = "";
 
-    // Limpar o resultado anterior
     textoResultado.textContent = "";
+    caixaResultado.style.display = "none";
 
-    // Começar novamente pela primeira pergunta
-    mostraPergunta();
+    atual = 0;
+    respostasA = 0;
+    respostasB = 0;
 }
 
-mostraPergunta();
+// Botão Começar
+botaoComecar.addEventListener("click", iniciarJogo);
