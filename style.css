@@ -24,10 +24,18 @@ body {
     text-align: center;
     padding: 30px;
     border-radius: 15px;
+    box-sizing: border-box;
 }
 
 h1 {
     color: var(--cor-destaque);
+}
+
+.nome-jogador {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--cor-destaque);
+    margin: 20px 0;
 }
 
 .caixa-perguntas {
@@ -57,8 +65,20 @@ button:hover {
     color: var(--cor-principal);
 }
 
+.caixa-inicio {
+    margin-top: 25px;
+}
+
+#botao-jogar {
+    width: 100%;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 18px;
+}
+
 .caixa-resultado {
     margin-top: 25px;
+    display: none;
 }
 
 .texto-resultado {
